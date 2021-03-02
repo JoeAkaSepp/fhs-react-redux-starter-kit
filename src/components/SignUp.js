@@ -1,46 +1,52 @@
-import React, { useState, useRef } from "react";
-import styles from "./Signup.module.css";
+import React, { useState } from "react";
+import { useFormik } from "formik";
+import { object, string } from "yup";
 import Button from "./Button";
 
-const Input = ({ type, label, onChange, value }) => {
+const Input = ({ type, label, onChange, value, name }) => {
   return (
     <div>
-      <label for={label}>{label}</label>
-      <input type={type} name={label} onChange={onChange} value={value} />
+      <label htmlFor={label}>{label}</label>
+      <input type={type} name={name} onChange={onChange} value={value} />
     </div>
   );
 };
 
-const SignUp = () => {
+const validationSchema = object({
+  username: string().min(3),
+  password: string().min(16),
+});
+
+function SignUp() {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const formik = useFormik({
+    initialValues: { username: "", password: "" },
+    validationSchema: validationSchema,
+  });
   return (
-    <div>
+    <form onSubmit={formik.handleSubmit}>
       <Input
         type="text"
         label="Username"
-        onChange={(evt) => {
-          setUsername(evt.target.value);
-        }}
-        value={username}
+        name="username"
+        onChange={formik.handleChange}
+        value={formik.values.username}
       />
+      {formik.errors.username}
       <Input
         type="password"
         label="Password"
-        onChange={(evt) => {
-          setPassword(evt.target.value);
-        }}
-        value={password}
+        name="password"
+        onChange={formik.handleChange}
+        value={formik.values.password}
       />
+      {formik.errors.password}
       <Button onClick={() => console.log(username + " " + password)}>
         SignIn
       </Button>
-    </div>
+    </form>
   );
-};
+}
 
-const App = () => {
-  return <SignUp />;
-};
-
-export default App;
+export default SignUp;

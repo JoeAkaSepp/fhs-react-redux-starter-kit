@@ -1,4 +1,9 @@
-import React from 'react'
-const App = () => <div>Your React/Redux Application</div>
+import React from "react";
+import SignUp from "./components/SignUp";
+const App = () => (
+  <div>
+    <SignUp />
+  </div>
+);
 
-export default App
+export default App;
